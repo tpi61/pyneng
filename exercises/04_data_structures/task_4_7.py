@@ -15,4 +15,18 @@
 проверять результат.
 """
 
+from turtle import clear
+
+
 mac = "AAAA:BBBB:CCCC"
+
+#split_mac = mac.split(':')
+#oct_1 = str(bin(int(split_mac[0], 16)))
+#oct_2 = str(bin(int(split_mac[1], 16)))
+#oct_3 = str(bin(int(split_mac[2], 16)))
+#
+#bit_mac = oct_1[2:] + oct_2[2:] + oct_3[2:]
+
+bit_mac = '{:b}'.format(int(mac.replace(':', ''), 16))
+
+print(bit_mac)

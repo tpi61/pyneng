@@ -26,3 +26,10 @@
 """
 
 ip = "192.168.3.1"
+
+raw_ip = ip.split('.')
+
+result = f'''{raw_ip[0]:<9} {raw_ip[1]:<9} {raw_ip[2]:<9} {raw_ip[3]:<9}
+{int(raw_ip[0]):08b}  {int(raw_ip[1]):08b}  {int(raw_ip[2]):08b}  {int(raw_ip[3]):08b}'''
+
+print(result)
