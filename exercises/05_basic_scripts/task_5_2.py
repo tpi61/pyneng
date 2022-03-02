@@ -30,3 +30,20 @@ Out[1]: '11111111111111111111111111110000'
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
+ip_pref = input('Введите IP-сеть в формате: 10.1.1.0/24: ').split('/')
+ip_adr = ip_pref[0].split('.')
+ip_adr_bin = ['{:08b}'.format(int(ip_adr[0])), '{:08b}'.format(int(ip_adr[1])), '{:08b}'.format(int(ip_adr[2])), '{:08b}'.format(int(ip_adr[3]))]
+ip_mask = ('1' * int(ip_pref[1])) + ('0' * (32 - int(ip_pref[1])))
+
+template = f'''
+Network:
+{int(ip_adr[0]):<10}{int(ip_adr[1]):<10}{int(ip_adr[2]):<10}{int(ip_adr[3]):<10}
+{ip_adr_bin[0]:<10}{ip_adr_bin[1]:<10}{ip_adr_bin[2]:<10}{ip_adr_bin[3]:<10}
+
+Mask:
+{'/'+ip_pref[1]}
+{int(ip_mask[0:8], 2):<10}{int(ip_mask[8:16], 2):<10}{int(ip_mask[16:24], 2):<10}{int(ip_mask[24:], 2):<10}
+{ip_mask[0:8]:<10}{ip_mask[8:16]:<10}{ip_mask[16:24]:<10}{ip_mask[24:]:<10}
+
+'''
+print(template)
