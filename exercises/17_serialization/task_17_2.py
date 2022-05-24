@@ -43,9 +43,73 @@
 Кроме того, создан список заголовков (headers), который должен быть записан в CSV.
 """
 
+
 import glob
+import re
+import csv 
 
 sh_version_files = glob.glob("sh_vers*")
-# print(sh_version_files)
+#print(sh_version_files)
 
 headers = ["hostname", "ios", "image", "uptime"]
+
+def parse_sh_version(sh_ver):
+  regex = (r'Cisco IOS Software, .+, Version (?P<ios>\S+),'
+           r'|System image file is "(?P<image>\S+)"'
+           r'|router uptime is (?P<uptime>.+)')
+  match_iter = re.finditer(regex, sh_ver)
+  result = []
+  for match in match_iter:
+    if match:
+      result.append(match.group(match.lastgroup))
+  result = (result[0],result[2],result[1])
+  return result
+
+
+def write_inventory_to_csv(data_filenames, csv_filename):
+  with open(csv_filename, 'w') as w_f:
+    writer = csv.writer(w_f)
+    writer.writerow(headers)
+    for file in data_filenames:
+      host = re.search(r'\S+_\S+_(\S+)\.txt', file).group(1)
+      with open(file) as f:
+        income = parse_sh_version(f.read())
+        writer.writerow((host,) + income)
+
+write_inventory_to_csv(sh_version_files, 'output_test01.csv')
+
+# ANSWER
+#####################
+# import re
+# import csv
+# import glob
+
+
+# def parse_sh_version(sh_ver_output):
+#     regex = (
+#         "Cisco IOS .*? Version (?P<ios>\S+), .*"
+#         "uptime is (?P<uptime>[\w, ]+)\n.*"
+#         'image file is "(?P<image>\S+)".*'
+#     )
+#     match = re.search(regex, sh_ver_output, re.DOTALL,)
+#     if match:
+#         return match.group("ios", "image", "uptime")
+
+
+# def write_inventory_to_csv(data_filenames, csv_filename):
+#     headers = ["hostname", "ios", "image", "uptime"]
+#     with open(csv_filename, "w") as f:
+#         writer = csv.writer(f)
+#         writer.writerow(headers)
+
+#         for filename in data_filenames:
+#             hostname = re.search("sh_version_(\S+).txt", filename).group(1)
+#             with open(filename) as f:
+#                 parsed_data = parse_sh_version(f.read())
+#                 if parsed_data:
+#                     writer.writerow([hostname] + list(parsed_data))
+
+
+# if __name__ == "__main__":
+#     sh_version_files = glob.glob("sh_vers*")
+#     write_inventory_to_csv(sh_version_files, "routers_inventory.csv")

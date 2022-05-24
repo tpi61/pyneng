@@ -24,3 +24,46 @@ R6           Fa 0/2          143           R S I           2811       Fa 0/0
 
 Проверить работу функции на содержимом файла sh_cdp_n_sw1.txt
 """
+import re
+
+def parse_sh_cdp_neighbors(sh_cdp_nei):
+        regex = (r'^(?P<host>\S+)>show.+'
+                r'|(?P<peer>\S+) +(?P<l_port>\S+ \d/\d+) + \d+.+ (?P<r_port>\S+ \d/\d+)')
+        result = {}
+        for line in sh_cdp_nei.split('\n'):
+                match = re.search(regex, line)
+                if match:
+                        if match.group('host'):
+                                host = match.group('host')
+                                result[host] = {}
+                        else:
+                                result[host][match.group('l_port')] = {match.group('peer'):match.group('r_port')}
+        return result
+
+
+if __name__ == "__main__":
+    with open('sh_cdp_n_sw1.txt') as f:
+            parse_sh_cdp_neighbors(f.read())
+
+# ASWER
+########################
+# import re
+
+
+# def parse_sh_cdp_neighbors(command_output):
+#     regex = re.compile(
+#         r"(?P<r_dev>\w+)  +(?P<l_intf>\S+ \S+)"
+#         r"  +\d+  +[\w ]+  +\S+ +(?P<r_intf>\S+ \S+)"
+#     )
+#     connect_dict = {}
+#     l_dev = re.search(r"(\S+)[>#]", command_output).group(1)
+#     connect_dict[l_dev] = {}
+#     for match in regex.finditer(command_output):
+#         r_dev, l_intf, r_intf = match.group("r_dev", "l_intf", "r_intf")
+#         connect_dict[l_dev][l_intf] = {r_dev: r_intf}
+#     return connect_dict
+
+
+# if __name__ == "__main__":
+#     with open("sh_cdp_n_sw1.txt") as f:
+#         print(parse_sh_cdp_neighbors(f.read()))

@@ -64,3 +64,34 @@ def ignore_command(command, ignore):
         if word in command:
             ignore_status = True
     return ignore_status
+
+def convert_config_to_dict(config_filename):
+    config_dict = {}
+    with open(config_filename) as config:
+        for line in config:
+            if not line.startswith('!') and len(line) > 1:
+                if not ignore_command(line, ignore):
+                    if not line.startswith(' '):
+                        key_line = line.rstrip('\n')
+                        config_dict[key_line] = []
+                    elif line.startswith(' '):
+                        config_dict[key_line].append(line.lstrip(' ').rstrip('\n'))
+
+    return config_dict
+
+convert_config_to_dict('config_sw1.txt')
+
+# ANSWER
+##################################
+# def convert_config_to_dict(config_filename):
+#     config_dict = {}
+#     with open(config_filename) as f:
+#         for line in f:
+#             line = line.rstrip()
+#             if line and not (line.startswith("!") or ignore_command(line, ignore)):
+#                 if line[0].isalnum():
+#                     section = line
+#                     config_dict[section] = []
+#                 else:
+#                     config_dict[section].append(line.strip())
+#     return config_dict

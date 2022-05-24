@@ -44,23 +44,22 @@
 
 """
 import yaml
-from pprint import pprint
 from draw_network_graph import draw_topology
 
-def transform_topology(yaml_date):
-    with open(yaml_date) as f:
-        output = {}
-        templates = yaml.safe_load(f)
-        for l_host, l_intf_list in templates.items():
-            for l_intf, r_device in l_intf_list.items():
-                l_dev = (l_host, l_intf)
-                for r_dev, r_intf in r_device.items():
-                    r_dev = (r_dev, r_intf) 
-                    if not r_dev in output.keys():
-                        output[l_dev] = r_dev
-       
-        return output
+
+def transform_topology(topology_filename):
+    with open(topology_filename) as f:
+        raw_topology = yaml.safe_load(f)
+
+    formatted_topology = {}
+    for l_device, peer in raw_topology.items():
+        for l_int, remote in peer.items():
+            r_device, r_int = list(remote.items())[0]
+            if not (r_device, r_int) in formatted_topology:
+                formatted_topology[(l_device, l_int)] = (r_device, r_int)
+    return formatted_topology
 
 
 if __name__ == "__main__":
-   draw_topology(transform_topology('TEST-01.yaml'))
+    formatted_topology = transform_topology("topology.yaml")
+    draw_topology(formatted_topology)

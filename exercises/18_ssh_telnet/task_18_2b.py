@@ -98,3 +98,52 @@ commands_with_errors = ["logging 0255.255.1", "logging", "a"]
 correct_commands = ["logging buffered 20010", "ip http server"]
 
 commands = commands_with_errors + correct_commands
+
+
+
+
+from pprint import pprint
+import re
+import yaml
+from netmiko import (ConnectHandler, NetmikoAuthenticationException,
+                     NetmikoTimeoutException)
+
+
+def send_show_command(dev, commands):
+    result = {}
+    try:
+        with ConnectHandler(**dev) as ssh:
+            ssh.enable()
+            hostname = ssh.find_prompt().rstrip('#')
+            print('Connecting to ' + hostname + '...  Ip is ' + dev['host'])
+            ssh.config_mode()
+            cur_prompt = ssh.find_prompt()
+            print(cur_prompt)
+            for command in commands:
+                print(cur_prompt + command)
+                if not ssh.send_command(command):
+                    print('OK')
+                else:
+                    print(ssh.send_command(command))
+                    print(commands.index(command))
+
+                # if re.search(r' Invalid input detected at \'\^\' marker.', ssh.send_command(command)):
+                #     print('Команда "'+command+'" выполнилась с ошибкой "Invalid input detected at \'^\' marker." на устройстве '+ dev['host'])
+                #     print('Введите команду ещё раз')
+                #     command = input()
+                #     print(command)
+                        
+                # except Exception as err: 
+                #     exception_type = type(err).__name__
+                #     print(exception_type)
+        #return output
+    
+    except (NetmikoTimeoutException, NetmikoAuthenticationException) as error:
+        return error
+    
+if __name__ == "__main__":
+    commands = commands_with_errors  # must be list
+    with open("devices.yaml") as f:
+        devices = yaml.safe_load(f)
+    for dev in devices:
+        pprint(send_show_command(dev, commands_with_errors))

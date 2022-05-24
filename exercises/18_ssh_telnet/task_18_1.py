@@ -17,12 +17,33 @@
 с помощью функции send_show_command (эта часть кода написана).
 
 """
+from pprint import pprint
+
 import yaml
+from netmiko import (ConnectHandler, NetmikoAuthenticationException,
+                     NetmikoTimeoutException)
 
+
+def send_show_command(dev, commands):
+    result = {}
+    try:
+        with ConnectHandler(**dev) as ssh:
+            ssh.enable()
+            for command in commands:
+                output = ssh.send_command(command)
+                result[command] = output
+        return result
+    except (NetmikoAuthenticationException):
+        print('Неверный логин или пароль')
+    except (NetmikoTimeoutException) as error:
+        print(error)
+    
 if __name__ == "__main__":
-    command = "sh ip int br"
-    with open("devices.yaml") as f:
+    commands = ["sh ip int br"] # must be list
+    with open("devices2.yaml") as f:
         devices = yaml.safe_load(f)
-
     for dev in devices:
-        print(send_show_command(dev, command))
+        pprint(send_show_command(dev, commands), width=120)
+
+
+

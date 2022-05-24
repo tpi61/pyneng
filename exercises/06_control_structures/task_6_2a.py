@@ -17,3 +17,81 @@
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
+  
+try:
+   ip_adr = input('Вводите IP-адрес в формате 10.0.1.1: ')
+   oct_1, oct_2, oct_3, oct_4 = ip_adr.split('.')
+   ip_adr_list = [int(oct_1), int(oct_2), int(oct_3), int(oct_4)]
+except (ValueError, IndexError):
+   print('Неправильный IP-адрес')
+else:
+   if ip_adr_list[0] > 255 or ip_adr_list[1] > 255 or ip_adr_list[2] > 255 or ip_adr_list[3] > 255:
+      print('Неправильный IP-адрес')
+   elif 1 <= ip_adr_list[0] <= 223:
+      print('unicast')
+   elif  224 <= ip_adr_list[0] <= 239:
+      print('multicast')
+   elif ip_adr == '255.255.255.255':
+      print('local broadcast')
+   elif ip_adr == '0.0.0.0':
+      print('unassigned')
+   else:
+      print('unused')
+
+# ANSVER
+##################################################
+# ip_address = input("Enter ip address: ")
+# octets = ip_address.split(".")
+# correct_ip = True
+
+# if len(octets) != 4:
+#     correct_ip = False
+# else:
+#     for octet in octets:
+#         # тут второе условие int(octet) in range(256)
+#         # проверяется только в том случае, если первое условие истина
+#         # Если встретился хоть один октет с нарушением,
+#         # дальше можно не смотреть
+#         if not (octet.isdigit() and int(octet) in range(256)):
+#             correct_ip = False
+#             break
+
+# if not correct_ip:
+#     print("Неправильный IP-адрес")
+# else:
+#     octets_num = [int(i) for i in octets]
+
+#     if octets_num[0] in range(1, 224):
+#         print("unicast")
+#     elif octets_num[0] in range(224, 240):
+#         print("multicast")
+#     elif ip_address == "255.255.255.255":
+#         print("local broadcast")
+#     elif ip_address == "0.0.0.0":
+#         print("unassigned")
+#     else:
+#         print("unused")
+
+
+# # второй вариант решения
+
+# ip = input("Введите IP-адрес в формате x.x.x.x: ")
+# octets = ip.split(".")
+# valid_ip = len(octets) == 4
+
+# for i in octets:
+#     valid_ip = i.isdigit() and 0 <= int(i) <= 255 and valid_ip
+
+# if valid_ip:
+#     if 1 <= int(octets[0]) <= 223:
+#         print("unicast")
+#     elif 224 <= int(octets[0]) <= 239:
+#         print("multicast")
+#     elif ip == "255.255.255.255":
+#         print("local broadcast")
+#     elif ip == "0.0.0.0":
+#         print("unassigned")
+#     else:
+#         print("unused")
+# else:
+#     print("Неправильный IP-адрес")

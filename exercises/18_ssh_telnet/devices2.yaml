@@ -1,21 +1,21 @@
-- device_type: cisco_ios
+- device_type: cisco_ios_telnet
   host: 192.168.56.196
   username: cisco
   password: cisco
   secret: cisco
   timeout: 10
   #fast_cli: true
-- device_type: cisco_ios
-  host: 192.168.56.197
+- device_type: cisco_ios_telnet
+  host: 192.168.56.19 #7
   username: cisco
-  password: cisco
+  password: cisco 
   secret: cisco
   timeout: 10
   #fast_cli: true
-- device_type: cisco_ios
+- device_type: cisco_ios_telnet
   host: 192.168.56.195
   username: cisco
-  password: cisco
+  password: cisc #o
   secret: cisco
   timeout: 10
   #fast_cli: true

@@ -5,10 +5,10 @@ from netmiko import (ConnectHandler, NetmikoAuthenticationException,
                      NetmikoTimeoutException)
 
 
-def send_show_command(device, commands):
+def send_show_command(dev, commands):
     result = {}
     try:
-        with ConnectHandler(**device) as ssh:
+        with ConnectHandler(**dev) as ssh:
             ssh.enable()
             for command in commands:
                 output = ssh.send_command(command)
@@ -18,10 +18,11 @@ def send_show_command(device, commands):
         print(error)
 
 
+
 if __name__ == "__main__":
     device = {
         "device_type": "cisco_ios_telnet",
-        "ip": "192.168.100.1",
+        "ip": "192.168.56.196",
         "username": "cisco",
         "password": "cisco",
         "secret": "cisco",
